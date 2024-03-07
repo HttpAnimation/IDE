@@ -1,8 +1,8 @@
-# MainTemplate/gitter
+# Kilt/gitter
 This branch holds the gitter.
 
 ## Installing
 To install the gitter open a terminal and run.
 ```bash
-wget https://raw.githubusercontent.com/HttpAnimation/IDE/gitter/gitter.bash
+wget https://raw.githubusercontent.com/HttpAnimation/Kilt/gitter/gitter.bash
 ```
