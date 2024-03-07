@@ -1,2 +1,2 @@
-# MainTemplate/stable
+# Kilt/stable
 A template I use
