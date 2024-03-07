@@ -16,5 +16,6 @@ fi
 echo "Current version: $(<"$VERSION_FILE")"
 
 echo "Compiling"
+# Compile command
 gcc -o Kilt main.c `pkg-config --cflags --libs gtk+-3.0`
 echo "Done"
