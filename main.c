@@ -5,6 +5,34 @@ static void on_window_closed(GtkWidget *widget, gpointer data) {
     gtk_main_quit();
 }
 
+// Callback function for opening a file
+static void on_open_file(GtkWidget *widget, gpointer data) {
+    GtkFileChooserDialog *dialog;
+    GtkFileChooserAction action = GTK_FILE_CHOOSER_ACTION_OPEN;
+    gint res;
+
+    dialog = gtk_file_chooser_dialog_new("Open File",
+                                         GTK_WINDOW(data),
+                                         action,
+                                         "_Cancel",
+                                         GTK_RESPONSE_CANCEL,
+                                         "_Open",
+                                         GTK_RESPONSE_ACCEPT,
+                                         NULL);
+
+    res = gtk_dialog_run(GTK_DIALOG(dialog));
+    if (res == GTK_RESPONSE_ACCEPT) {
+        char *filename;
+        GtkFileChooser *chooser = GTK_FILE_CHOOSER(dialog);
+        filename = gtk_file_chooser_get_filename(chooser);
+        // Update file label with selected filename
+        gtk_label_set_text(GTK_LABEL(data), filename);
+        g_free(filename);
+    }
+
+    gtk_widget_destroy(GTK_WIDGET(dialog));
+}
+
 int main(int argc, char *argv[]) {
     // Initialize GTK
     gtk_init(&argc, &argv);
@@ -16,12 +44,17 @@ int main(int argc, char *argv[]) {
     g_signal_connect(window, "destroy", G_CALLBACK(on_window_closed), NULL);
 
     // Create a vertical box container for the sidebar and text editor
-    GtkWidget *vbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+    GtkWidget *vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
     gtk_container_add(GTK_CONTAINER(window), vbox);
 
     // Create a label for displaying the file name
     GtkWidget *file_label = gtk_label_new("File: None");
     gtk_box_pack_start(GTK_BOX(vbox), file_label, FALSE, FALSE, 0);
+
+    // Create a button to open a file
+    GtkWidget *open_button = gtk_button_new_with_label("Open File");
+    g_signal_connect(open_button, "clicked", G_CALLBACK(on_open_file), file_label);
+    gtk_box_pack_start(GTK_BOX(vbox), open_button, FALSE, FALSE, 0);
 
     // Create a text view for editing code
     GtkWidget *text_view = gtk_text_view_new();
