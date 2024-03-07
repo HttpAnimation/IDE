@@ -2,9 +2,34 @@
 #include <stdlib.h>
 #include <gtk/gtk.h>
 
+#define MAX_VERSION_LENGTH 10 // Maximum length of version number
+
 // Callback function for when the window is closed
 static void on_window_closed(GtkWidget *widget, gpointer data) {
     gtk_main_quit();
+}
+
+// Function to read version number from version.conf file
+static char *read_version_number() {
+    FILE *fp = fopen("version.conf", "r");
+    if (fp == NULL) {
+        fprintf(stderr, "Error: version.conf not found or cannot be opened.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    char *version = (char *)malloc(MAX_VERSION_LENGTH * sizeof(char));
+    if (version == NULL) {
+        fprintf(stderr, "Error: Memory allocation failed.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    if (fgets(version, MAX_VERSION_LENGTH, fp) == NULL) {
+        fprintf(stderr, "Error: Failed to read version number.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    fclose(fp);
+    return version;
 }
 
 // Callback function for opening a file
@@ -61,7 +86,12 @@ int main(int argc, char *argv[]) {
 
     // Create the main window
     GtkWidget *window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-    gtk_window_set_title(GTK_WINDOW(window), "Kilt - Unix");
+    char *version = read_version_number();
+    char window_title[50];
+    snprintf(window_title, 50, "Kilt - Unix %s", version); // Append version number to window title
+    gtk_window_set_title(GTK_WINDOW(window), window_title);
+    free(version);
+
     gtk_window_set_default_size(GTK_WINDOW(window), 800, 600);
     g_signal_connect(window, "destroy", G_CALLBACK(on_window_closed), NULL);
 
