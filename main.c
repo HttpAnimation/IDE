@@ -1,3 +1,5 @@
+#include <stdio.h>
+#include <stdlib.h>
 #include <gtk/gtk.h>
 
 // Callback function for when the window is closed
@@ -11,7 +13,7 @@ static void on_open_file(GtkWidget *widget, gpointer data) {
     GtkFileChooserAction action = GTK_FILE_CHOOSER_ACTION_OPEN;
     gint res;
 
-dialog = GTK_FILE_CHOOSER_DIALOG(gtk_file_chooser_dialog_new("Open File",
+    dialog = GTK_FILE_CHOOSER_DIALOG(gtk_file_chooser_dialog_new("Open File",
                                          GTK_WINDOW(data),
                                          action,
                                          "_Cancel",
@@ -25,6 +27,26 @@ dialog = GTK_FILE_CHOOSER_DIALOG(gtk_file_chooser_dialog_new("Open File",
         char *filename;
         GtkFileChooser *chooser = GTK_FILE_CHOOSER(dialog);
         filename = gtk_file_chooser_get_filename(chooser);
+        
+        // Open the file and read its contents
+        FILE *file = fopen(filename, "r");
+        if (file != NULL) {
+            fseek(file, 0, SEEK_END);
+            long file_size = ftell(file);
+            rewind(file);
+            char *file_contents = (char *)malloc(file_size + 1);
+            if (file_contents != NULL) {
+                fread(file_contents, 1, file_size, file);
+                file_contents[file_size] = '\0';
+                
+                // Set the file contents into the text buffer
+                GtkTextBuffer *buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(data));
+                gtk_text_buffer_set_text(buffer, file_contents, -1);
+                
+                free(file_contents);
+            }
+            fclose(file);
+        }
         // Update file label with selected filename
         gtk_label_set_text(GTK_LABEL(data), filename);
         g_free(filename);
