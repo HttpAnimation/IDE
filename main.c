@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <gtk/gtk.h>
 
+// Defines 
 #define MAX_VERSION_LENGTH 100000 // Maximum length of version number
 
 // Callback function for when the window is closed
