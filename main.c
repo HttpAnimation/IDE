@@ -11,14 +11,14 @@ static void on_open_file(GtkWidget *widget, gpointer data) {
     GtkFileChooserAction action = GTK_FILE_CHOOSER_ACTION_OPEN;
     gint res;
 
-    dialog = gtk_file_chooser_dialog_new("Open File",
+dialog = GTK_FILE_CHOOSER_DIALOG(gtk_file_chooser_dialog_new("Open File",
                                          GTK_WINDOW(data),
                                          action,
                                          "_Cancel",
                                          GTK_RESPONSE_CANCEL,
                                          "_Open",
                                          GTK_RESPONSE_ACCEPT,
-                                         NULL);
+                                         NULL));
 
     res = gtk_dialog_run(GTK_DIALOG(dialog));
     if (res == GTK_RESPONSE_ACCEPT) {
