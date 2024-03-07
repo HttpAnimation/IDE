@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <gtk/gtk.h>
 
-#define MAX_VERSION_LENGTH 10 // Maximum length of version number
+#define MAX_VERSION_LENGTH 100000 // Maximum length of version number
 
 // Callback function for when the window is closed
 static void on_window_closed(GtkWidget *widget, gpointer data) {
